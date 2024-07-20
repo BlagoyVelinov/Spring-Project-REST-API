@@ -8,7 +8,6 @@ import bg.softuni.CinemaTickets_Movies.repositories.CategoryRepository;
 import bg.softuni.CinemaTickets_Movies.repositories.MovieClassRepository;
 import bg.softuni.CinemaTickets_Movies.repositories.MovieRepository;
 import bg.softuni.CinemaTickets_Movies.services.MovieService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +18,13 @@ public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
     private final CategoryRepository categoryRepository;
     private final MovieClassRepository movieClassRepository;
-    private final ModelMapper modelMapper;
 
     @Autowired
     public MovieServiceImpl(MovieRepository movieRepository, CategoryRepository categoryRepository,
-                            MovieClassRepository movieClassRepository, ModelMapper modelMapper) {
+                            MovieClassRepository movieClassRepository) {
         this.movieRepository = movieRepository;
         this.categoryRepository = categoryRepository;
         this.movieClassRepository = movieClassRepository;
-        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -41,9 +38,17 @@ public class MovieServiceImpl implements MovieService {
         List<Category> categories = this.categoryRepository.findAllByNameIn(addMovie.getGenreCategories());
         MovieClass movieClass = this.movieClassRepository.findByName(addMovie.getMovieClass());
 
-        Movie movie = this.modelMapper.map(addMovie, Movie.class);
-        movie.setGenreCategories(categories)
-                .setMovieClass(movieClass);
-        return movie;
+        return new Movie()
+                .setAudio(addMovie.getAudio())
+                .setGenreCategories(categories)
+                .setMovieClass(movieClass)
+                .setDescription(addMovie.getDescription())
+                .setName(addMovie.getName())
+                .setHallNumber(addMovie.getHallNumber())
+                .setMovieLength(addMovie.getMovieLength())
+                .setSubtitles(addMovie.getSubtitles())
+                .setImageUrl(addMovie.getImageUrl())
+                .setTrailerUrl(addMovie.getTrailerUrl())
+                .setProjectionFormat(addMovie.getProjectionFormat());
     }
 }
