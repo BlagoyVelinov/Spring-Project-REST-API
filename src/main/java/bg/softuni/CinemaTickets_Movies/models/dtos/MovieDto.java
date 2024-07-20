@@ -1,5 +1,7 @@
 package bg.softuni.CinemaTickets_Movies.models.dtos;
 
+import bg.softuni.CinemaTickets_Movies.models.entities.BookingTime;
+import bg.softuni.CinemaTickets_Movies.models.entities.MovieClass;
 import bg.softuni.CinemaTickets_Movies.models.enums.Genre;
 import bg.softuni.CinemaTickets_Movies.models.enums.HallNumber;
 import bg.softuni.CinemaTickets_Movies.models.enums.MovieClassEnum;
@@ -44,12 +46,15 @@ public class MovieDto {
     @NotNull(message = "Please select a format of projection!")
     private ProjectionFormat projectionFormat;
     @NotNull(message = "Please select a class of the movie!")
-    private MovieClassEnum movieClass;
+    private MovieClass movieClass;
     @NotEmpty(message = "Please select min 1 category!")
     private List<Genre> genreCategories;
 
+    private List<BookingTime> bookingTimes;
+
     public MovieDto() {
         this.genreCategories = new ArrayList<>();
+        this.bookingTimes = new ArrayList<>();
     }
 
     public long getId() {
@@ -142,11 +147,11 @@ public class MovieDto {
         return this;
     }
 
-    public MovieClassEnum getMovieClass() {
+    public MovieClass getMovieClass() {
         return movieClass;
     }
 
-    public MovieDto setMovieClass(MovieClassEnum movieClass) {
+    public MovieDto setMovieClass(MovieClass movieClass) {
         this.movieClass = movieClass;
         return this;
     }
@@ -157,6 +162,15 @@ public class MovieDto {
 
     public MovieDto setGenreCategories(List<Genre> genreCategories) {
         this.genreCategories = genreCategories;
+        return this;
+    }
+
+    public List<BookingTime> getBookingTimes() {
+        return bookingTimes;
+    }
+
+    public MovieDto setBookingTimes(List<BookingTime> bookingTimes) {
+        this.bookingTimes = bookingTimes;
         return this;
     }
 }
