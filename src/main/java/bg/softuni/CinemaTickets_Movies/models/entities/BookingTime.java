@@ -14,10 +14,6 @@ public class BookingTime extends BaseEntity {
 
     public BookingTime() {}
 
-    public BookingTime(BookingTimeEnum startTime) {
-        this.setBookingTime(startTime);
-    }
-
     public BookingTimeEnum getBookingTime() {
         return bookingTime;
     }

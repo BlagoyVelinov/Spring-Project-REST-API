@@ -1,12 +1,13 @@
 package bg.softuni.CinemaTickets_Movies.web;
 
 import bg.softuni.CinemaTickets_Movies.models.dtos.AddMovieDto;
+import bg.softuni.CinemaTickets_Movies.models.dtos.BookingTimeDto;
 import bg.softuni.CinemaTickets_Movies.models.dtos.MovieDto;
 import bg.softuni.CinemaTickets_Movies.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
@@ -27,7 +28,25 @@ public class MovieController {
     }
     @PostMapping("/add-movie")
     public ResponseEntity<MovieDto> createMovie(@RequestBody AddMovieDto addMovieDto) {
-        this.movieService.movieCreate(addMovieDto);
+        MovieDto movieDto = this.movieService.movieCreate(addMovieDto);
+        return ResponseEntity.created(
+                ServletUriComponentsBuilder.fromCurrentRequest()
+                        .path("/add=movie/{id}")
+                        .buildAndExpand(movieDto.getId())
+                        .toUri()
+        ).body(movieDto);
+    }
+
+    @GetMapping("/movie/{id}")
+    public ResponseEntity<MovieDto> getMovieById(@PathVariable long id) {
+        MovieDto movieView = this.movieService.getMovieDtoById(id);
+        return ResponseEntity.ok( movieView);
+    }
+
+    @PutMapping("/update-projection-time/{id}")
+    public ResponseEntity<MovieDto>updateProjection(@PathVariable("id") long id,
+                                                    @RequestBody BookingTimeDto bookingTimeDto) {
+        this.movieService.addBookingTimes(id, bookingTimeDto);
         return ResponseEntity.ok().build();
     }
 
@@ -35,11 +54,5 @@ public class MovieController {
     public ResponseEntity<MovieDto> deleteMovieById(@PathVariable("id") long id) {
         this.movieService.deleteMovieById(id);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/movie/{id}")
-    public ResponseEntity<MovieDto> updateProjection(@PathVariable long id) {
-        MovieDto movieView = this.movieService.getMovieDtoById(id);
-        return ResponseEntity.ok(movieView);
     }
 }

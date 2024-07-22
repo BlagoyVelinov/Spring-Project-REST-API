@@ -1,14 +1,17 @@
 package bg.softuni.CinemaTickets_Movies.services.impl;
 
 import bg.softuni.CinemaTickets_Movies.models.dtos.AddMovieDto;
+import bg.softuni.CinemaTickets_Movies.models.dtos.BookingTimeDto;
 import bg.softuni.CinemaTickets_Movies.models.dtos.MovieDto;
+import bg.softuni.CinemaTickets_Movies.models.entities.BookingTime;
 import bg.softuni.CinemaTickets_Movies.models.entities.Category;
 import bg.softuni.CinemaTickets_Movies.models.entities.Movie;
 import bg.softuni.CinemaTickets_Movies.models.entities.MovieClass;
 import bg.softuni.CinemaTickets_Movies.models.enums.Genre;
-import bg.softuni.CinemaTickets_Movies.repositories.CategoryRepository;
-import bg.softuni.CinemaTickets_Movies.repositories.MovieClassRepository;
 import bg.softuni.CinemaTickets_Movies.repositories.MovieRepository;
+import bg.softuni.CinemaTickets_Movies.services.BookingTimeService;
+import bg.softuni.CinemaTickets_Movies.services.CategoryService;
+import bg.softuni.CinemaTickets_Movies.services.MovieClassService;
 import bg.softuni.CinemaTickets_Movies.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,15 +21,18 @@ import java.util.List;
 @Service
 public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
-    private final CategoryRepository categoryRepository;
-    private final MovieClassRepository movieClassRepository;
+    private final CategoryService categoryService;
+    private final MovieClassService movieClassService;
+    private final BookingTimeService bookingTimeService;
 
     @Autowired
-    public MovieServiceImpl(MovieRepository movieRepository, CategoryRepository categoryRepository,
-                            MovieClassRepository movieClassRepository) {
+    public MovieServiceImpl(MovieRepository movieRepository, CategoryService categoryService,
+                            MovieClassService movieClassService, BookingTimeService bookingTimeService) {
         this.movieRepository = movieRepository;
-        this.categoryRepository = categoryRepository;
-        this.movieClassRepository = movieClassRepository;
+        this.categoryService = categoryService;
+
+        this.movieClassService = movieClassService;
+        this.bookingTimeService = bookingTimeService;
     }
 
     @Override
@@ -36,10 +42,10 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void movieCreate(AddMovieDto createMovie) {
+    public MovieDto movieCreate(AddMovieDto createMovie) {
         Movie movie = this.mapMovieDtoToMovie(createMovie);
-
         this.movieRepository.save(movie);
+        return this.mapMovieToMovieDto(movie);
     }
 
     @Override
@@ -48,6 +54,14 @@ public class MovieServiceImpl implements MovieService {
         return movieList.stream()
                 .map(this::mapMovieToMovieDto)
                 .toList();
+    }
+
+    @Override
+    public void addBookingTimes(long movieId, BookingTimeDto bookingTimeDto) {
+        Movie movie = this.getMovieById(movieId);
+        List<BookingTime> bookingTimes = this.bookingTimeService.getBookingTimesByStartTime(bookingTimeDto);
+        movie.setBookingTimes(bookingTimes);
+        this.movieRepository.save(movie);
     }
 
     @Override
@@ -82,8 +96,8 @@ public class MovieServiceImpl implements MovieService {
                 .setBookingTimes(movie.getBookingTimes());
     }
     private Movie mapMovieDtoToMovie(AddMovieDto addMovie) {
-        List<Category> categories = this.categoryRepository.findAllByNameIn(addMovie.getGenreCategories());
-        MovieClass movieClass = this.movieClassRepository.findByName(addMovie.getMovieClass());
+        List<Category> categories = this.categoryService.getCategoriesByGenre(addMovie.getGenreCategories());
+        MovieClass movieClass = this.movieClassService.getMovieClassByName(addMovie.getMovieClass());
 
         return new Movie()
                 .setAudio(addMovie.getAudio())

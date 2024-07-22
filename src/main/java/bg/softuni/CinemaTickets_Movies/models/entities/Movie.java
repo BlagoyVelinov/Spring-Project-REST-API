@@ -30,7 +30,7 @@ public class Movie extends BaseEntity{
     private String audio;
     @Column
     private String subtitles;
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(nullable = false)
     private String description;
     @Column(name = "trailer_url", nullable = false)
     private String trailerUrl;
@@ -42,11 +42,11 @@ public class Movie extends BaseEntity{
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> genreCategories;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "movies__booking_times",
             joinColumns = @JoinColumn(name = "movie_id"),
-            inverseJoinColumns = @JoinColumn(name = "start_time_id"))
+            inverseJoinColumns = @JoinColumn(name = "booking_time_id"))
     private List<BookingTime> bookingTimes;
 
     public Movie() {

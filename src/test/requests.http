@@ -1,0 +1,17 @@
+### Send POST request with json body
+POST http://localhost:8081/movies/add-movie
+Content-Type: application/json
+
+{
+  "audio": "Angl.",
+  "description": "Нито звук: Ден първи ни пренася сред оживените улици на Ню Йорк, където ставаме свидетели на ужасяващите първи мигове от колапса на човечеството и потъването на света в тишина...",
+  "hallNumber":"HALL_2",
+  "imageUrl":"https://m.media-amazon.com/images/M/MV5BNGZmODU3ZDEtMjQwZC00NTA5LThmNWYtYzk5MmY5ZmM4NGIxXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_QL75_UX190_CR0,0,190,281_.jpg",
+  "movieLength": 120,
+  "name":"No Sound: Day one",
+  "projectionFormat":"D_2D",
+  "subtitles":"Bulg.",
+  "trailerUrl": "https://www.youtube.com/embed/YPY7J-flzE8",
+  "movieClass": "C_PLUS",
+  "genreCategories":["FANTASY", "HORROR"]
+}
