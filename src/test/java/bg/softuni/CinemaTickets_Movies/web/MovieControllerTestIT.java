@@ -16,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -154,7 +153,6 @@ public class MovieControllerTestIT {
                 .setSubtitles("Bulg")
                 .setImageUrl("testImage")
                 .setTrailerUrl("https://www.youtube.com/embed/hJiPAJKjUVg")
-                .setProjectionFormat(ProjectionFormat.D_3D)
-                .setBookingTimes(new ArrayList<>());
+                .setProjectionFormat(ProjectionFormat.D_3D);
     }
 }
