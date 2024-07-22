@@ -63,7 +63,7 @@ VALUES ('Engl.',
         'HALL_2', 'https://m.media-amazon.com/images/M/MV5BZmYwY2EyZmItYWViZi00YTFhLWE3NGEtMDE5ODJmMTQ2ZWRhXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg',
         120, 'Trap 2024', 'D_4DX', 'Bulg.', 'https://www.youtube.com/embed/hJiPAJKjUVg', 5);
 
-INSERT INTO `movies__booking_times`(`movie_id`, `start_time_id`)
+INSERT INTO `movies__booking_times`(`movie_id`, `booking_time_id`)
 VALUES (4, 4),
        (4, 5),
        (5, 9),

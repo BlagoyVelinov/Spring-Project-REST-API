@@ -4,6 +4,7 @@ import bg.softuni.CinemaTickets_Movies.models.dtos.BookingTimeDto;
 import bg.softuni.CinemaTickets_Movies.models.entities.BookingTime;
 import bg.softuni.CinemaTickets_Movies.repositories.BookingTimeRepository;
 import bg.softuni.CinemaTickets_Movies.services.BookingTimeService;
+import bg.softuni.CinemaTickets_Movies.services.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +23,11 @@ public class BookingTimeServiceImpl implements BookingTimeService {
     @Override
     public List<BookingTime> getBookingTimesByStartTime(BookingTimeDto bookingTimeDto) {
         return this.bookingTimeRepository.findAllByBookingTimeIn(bookingTimeDto.getStartMovieTimes());
+    }
+
+    @Override
+    public BookingTime getBookingTimeById(long id) {
+        return this.bookingTimeRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Booking time is not found!"));
     }
 }

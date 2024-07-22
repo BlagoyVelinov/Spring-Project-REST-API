@@ -42,7 +42,7 @@ public class Movie extends BaseEntity{
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> genreCategories;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "movies__booking_times",
             joinColumns = @JoinColumn(name = "movie_id"),
