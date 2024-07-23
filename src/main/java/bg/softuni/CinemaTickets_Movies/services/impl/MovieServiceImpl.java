@@ -80,6 +80,7 @@ public class MovieServiceImpl implements MovieService {
                 .stream()
                 .map(Category::getName)
                 .toList();
+
         return new MovieDto()
                 .setId(movie.getId())
                 .setAudio(movie.getAudio())
@@ -95,6 +96,7 @@ public class MovieServiceImpl implements MovieService {
                 .setProjectionFormat(movie.getProjectionFormat())
                 .setBookingTimes(movie.getBookingTimes());
     }
+
     private Movie mapMovieDtoToMovie(AddMovieDto addMovie) {
         List<Category> categories = this.categoryService.getCategoriesByGenre(addMovie.getGenreCategories());
         MovieClass movieClass = this.movieClassService.getMovieClassByName(addMovie.getMovieClass());

@@ -33,14 +33,4 @@ public class BookingTimeServiceImpl implements BookingTimeService {
                 .orElseThrow(() -> new ObjectNotFoundException("Booking time is not found!"));
     }
 
-    @Override
-    public void initBookingTimesValues() {
-        if (this.bookingTimeRepository.count() == 0) {
-            List<BookingTime> bookingTimeList = Arrays.stream(BookingTimeEnum.values())
-                    .map(BookingTime::new)
-                    .toList();
-
-            this.bookingTimeRepository.saveAll(bookingTimeList);
-        }
-    }
 }

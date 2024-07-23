@@ -11,6 +11,7 @@ public class BookingTime extends BaseEntity {
     @Column(name = "booking_time")
     @Enumerated(EnumType.STRING)
     private BookingTimeEnum bookingTime;
+    @Column(name = "booking_time_value")
     private String bookingTimeValue;
 
     public BookingTime() {

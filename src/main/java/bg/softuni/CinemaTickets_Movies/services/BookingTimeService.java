@@ -9,5 +9,4 @@ public interface BookingTimeService {
     List<BookingTime> getBookingTimesByStartTime(BookingTimeDto bookingTimeDto);
     BookingTime getBookingTimeById(long id);
 
-    void initBookingTimesValues();
 }
