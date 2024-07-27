@@ -10,7 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "movies")
-public class Movie extends BaseEntity{
+public class Movie extends BaseEntity {
+    private static final String REQUIRED_URL_PART = "https://www.youtube.com/embed/";
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -131,11 +132,11 @@ public class Movie extends BaseEntity{
     }
 
     public Movie setTrailerUrl(String trailerUrl) {
-        if (trailerUrl.contains("youtube") && !trailerUrl.contains("embed")) {
-            int startIndex = trailerUrl.indexOf("=");
-            trailerUrl = trailerUrl.substring(0,23) + "/embed" +
-                    trailerUrl.substring(startIndex).replace("=", "/");
-        }
+
+        int startIndex = trailerUrl.indexOf("=");
+        trailerUrl = REQUIRED_URL_PART +
+                trailerUrl.substring(startIndex).replaceFirst("=", "");
+
         this.trailerUrl = trailerUrl;
         return this;
     }
