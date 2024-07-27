@@ -18,36 +18,27 @@ import java.util.List;
 public class MovieDto {
 
     private long id;
-    @NotEmpty(message = "Name cannot be null ot empty!")
-    @Size(min= 3, message = "Name must be at least 3 characters")
-    @UniqueMovieName(message = "Movie with this name already exist!")
+
     private String name;
-    @NotNull(message = "Insert a movie length")
-    @Positive(message = "Movie Length should be positive number!")
+
     private Integer movieLength;
 
-    @NotNull(message = "You must select hall number!")
     private HallNumber hallNumber;
-    @NotEmpty
-    @Size(min = 4, max = 20, message = "Audio length must be between 4 and 10 characters")
+
     private String audio;
-    @NotEmpty
-    @Size(min = 4, max = 20, message = "Subtitles length must be between 4 and 10 characters")
+
     private String subtitles;
-    @NotEmpty(message = "Description cannot be null ot empty!")
-    @Size(min = 5, message = "Description must be at least 5 characters!")
+
     private String description;
-    @NotEmpty
-    @Size(min = 10, message = "Put correct imageUrl")
+
     private String imageUrl;
-    @NotEmpty
-    @Size(min = 10, message = "Put correct trailerUrl")
-    private String trailerUrl; //TODO: trailer трябва да мачва 'https://www.youtube.com/embed/mps1HbpECIA'
-    @NotNull(message = "Please select a format of projection!")
+
+    private String trailerUrl;
+
     private ProjectionFormat projectionFormat;
-    @NotNull(message = "Please select a class of the movie!")
+
     private MovieClass movieClass;
-    @NotEmpty(message = "Please select min 1 category!")
+
     private List<Genre> genreCategories;
 
     private List<BookingTime> bookingTimes;
