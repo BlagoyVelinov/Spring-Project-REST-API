@@ -40,7 +40,7 @@ public class AddMovieDto {
     @Size(min = 10, max = 250,
             message = "Put correct imageUrl / between 10 and 250 characters!")
     private String imageUrl;
-    @NotEmpty
+    @NotNull
     @Size(min = 10, max = 100,
             message = "Put correct trailerUrl / between 10 and 100 characters!")
     private String trailerUrl;
