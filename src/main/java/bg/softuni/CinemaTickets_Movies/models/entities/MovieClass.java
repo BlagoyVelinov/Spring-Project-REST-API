@@ -26,7 +26,7 @@ public class MovieClass extends BaseEntity {
 
     public MovieClass setName(MovieClassEnum name) {
         this.name = name;
-//        this.setDescription(name);
+        this.setDescription(name);
         return this;
     }
 
@@ -47,37 +47,37 @@ public class MovieClass extends BaseEntity {
         this.description = description;
         return this;
     }
-//    private void setDescription(MovieClassEnum name) {
-//        String description = "";
-//        String icon = "";
-//        switch (name) {
-//            case B_ -> {
-//                description = "No age restrictions";
-//                icon = MovieClassEnum.B_.getValue();
-//            }
-//            case C_ -> {
-//                description = "Forbidden under 12";
-//                icon = MovieClassEnum.C_.getValue();
-//            }
-//            case C_PLUS -> {
-//                description = "Forbidden under 14";
-//                icon = MovieClassEnum.C_PLUS.getValue();
-//            }
-//            case D_ -> {
-//                description = "Forbidden under 16";
-//                icon = MovieClassEnum.D_.getValue();
-//            }
-//            case X_ -> {
-//                description = "Forbidden under 18";
-//                icon = MovieClassEnum.X_.getValue();
-//            }
-//            case TBC -> {
-//                description = "Uncategorized";
-//                icon = MovieClassEnum.TBC.getValue();
-//            }
-//        }
-//
-//        this.description = description;
-//        this.icon = icon;
-//    }
+    private void setDescription(MovieClassEnum name) {
+        String description = "";
+        String icon = "";
+        switch (name) {
+            case B_ -> {
+                description = "No age restrictions";
+                icon = MovieClassEnum.B_.getValue();
+            }
+            case C_ -> {
+                description = "Forbidden under 12";
+                icon = MovieClassEnum.C_.getValue();
+            }
+            case C_PLUS -> {
+                description = "Forbidden under 14";
+                icon = MovieClassEnum.C_PLUS.getValue();
+            }
+            case D_ -> {
+                description = "Forbidden under 16";
+                icon = MovieClassEnum.D_.getValue();
+            }
+            case X_ -> {
+                description = "Forbidden under 18";
+                icon = MovieClassEnum.X_.getValue();
+            }
+            case TBC -> {
+                description = "Uncategorized";
+                icon = MovieClassEnum.TBC.getValue();
+            }
+        }
+
+        this.description = description;
+        this.icon = icon;
+    }
 }

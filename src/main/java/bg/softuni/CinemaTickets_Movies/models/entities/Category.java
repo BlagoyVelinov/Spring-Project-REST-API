@@ -1,5 +1,6 @@
 package bg.softuni.CinemaTickets_Movies.models.entities;
 
+import bg.softuni.CinemaTickets_Movies.models.enums.BookingTimeEnum;
 import bg.softuni.CinemaTickets_Movies.models.enums.Genre;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
