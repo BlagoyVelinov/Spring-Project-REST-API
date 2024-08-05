@@ -10,8 +10,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "movies")
-public class Movie extends BaseEntity {
+public class Movie{
     private static final String REQUIRED_URL_PART = "https://www.youtube.com/embed/";
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -53,6 +57,15 @@ public class Movie extends BaseEntity {
     public Movie() {
         this.genreCategories = new ArrayList<>();
         this.bookingTimes = new ArrayList<>();
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public Movie setId(long id) {
+        this.id = id;
+        return this;
     }
 
     public String getName() {
@@ -133,9 +146,11 @@ public class Movie extends BaseEntity {
 
     public Movie setTrailerUrl(String trailerUrl) {
 
-        int startIndex = trailerUrl.indexOf("=");
-        trailerUrl = REQUIRED_URL_PART +
-                trailerUrl.substring(startIndex).replaceFirst("=", "");
+        if (!trailerUrl.contains(REQUIRED_URL_PART)) {
+            int startIndex = trailerUrl.indexOf("=");
+            trailerUrl = REQUIRED_URL_PART +
+                    trailerUrl.substring(startIndex).replaceFirst("=", "");
+        }
 
         this.trailerUrl = trailerUrl;
         return this;

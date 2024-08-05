@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "movie_classes")
-public class MovieClass extends BaseEntity {
+public class MovieClass{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Enumerated(EnumType.STRING)
     private MovieClassEnum name;
@@ -18,6 +21,15 @@ public class MovieClass extends BaseEntity {
 
     public MovieClass(MovieClassEnum name) {
         this.setName(name);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public MovieClass setId(long id) {
+        this.id = id;
+        return this;
     }
 
     public MovieClassEnum getName() {

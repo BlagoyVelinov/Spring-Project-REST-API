@@ -4,10 +4,12 @@ import bg.softuni.CinemaTickets_Movies.models.entities.Category;
 import bg.softuni.CinemaTickets_Movies.models.entities.Movie;
 import bg.softuni.CinemaTickets_Movies.models.entities.MovieClass;
 import bg.softuni.CinemaTickets_Movies.models.enums.*;
+import bg.softuni.CinemaTickets_Movies.repositories.MovieClassRepository;
 import bg.softuni.CinemaTickets_Movies.repositories.MovieRepository;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,20 +32,48 @@ public class MovieControllerTestIT {
 
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private MovieClassRepository movieClassRepository;
 
 
     @Autowired
     private MockMvc mockMvc;
 
+    @BeforeEach
+    public void setUp() {
+        this.initMovieClassToRepo();
+    }
+
     @AfterEach
     public void tearDown() {
-        movieRepository.deleteAll();
+        this.movieRepository.deleteAll();
+        this.movieClassRepository.deleteAll();
     }
 
     @Test
     public void testGetMovieById() throws Exception {
         Movie testMovie = this.createMovie();
-        this.movieRepository.save(testMovie);
+        MvcResult mvcResult = this.mockMvc.perform(post("/movies/add-movie")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                    {
+                                  "audio": "Angl.",
+                                  "description": "Нито звук: Ден първи ни пренася сред оживените улици на Ню Йорк, където ставаме свидетели на ужасяващите първи мигове от колапса на човечеството и потъването на света в тишина...",
+                                  "hallNumber":"HALL_2",
+                                  "imageUrl":"https://m.media-amazon.com/images/M/MV5BNGZmODU3ZDEtMjQwZC00NTA5LThmNWYtYzk5MmY5ZmM4NGIxXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_QL75_UX190_CR0,0,190,281_.jpg",
+                                  "movieLength": 120,
+                                  "name":"Trap: Day one",
+                                  "projectionFormat":"D_2D",
+                                  "subtitles":"Bulg.",
+                                  "trailerUrl": "https://www.youtube.com/embed/YPY7J-flzE8",
+                                  "movieClass": "C_PLUS",
+                                  "genreCategories":["FANTASY", "HORROR"]
+                                }
+                                """)
+
+                ).andExpect(status().isCreated())
+                .andExpect(header().exists("Location"))
+                .andReturn();
 
         this.mockMvc
                 .perform(get("/movies/movie/{id}", testMovie.getId())
@@ -84,8 +115,9 @@ public class MovieControllerTestIT {
 
     @Test
     public void testMovieNotFound() throws Exception {
-        mockMvc
-                .perform(get("/movies//movie/{id}", "-1")
+        Movie testMovie = this.createMovie();
+        this.mockMvc
+                .perform(get("/movies/movie/{id}", 5555)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -94,9 +126,29 @@ public class MovieControllerTestIT {
     public void testDeleteMovieById() throws Exception {
 
         Movie testMovie = this.createMovie();
-        this.movieRepository.save(testMovie);
+        MvcResult mvcResult = this.mockMvc.perform(post("/movies/add-movie")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                    {
+                                  "audio": "Angl.",
+                                  "description": "Нито звук: Ден първи ни пренася сред оживените улици на Ню Йорк, където ставаме свидетели на ужасяващите първи мигове от колапса на човечеството и потъването на света в тишина...",
+                                  "hallNumber":"HALL_2",
+                                  "imageUrl":"https://m.media-amazon.com/images/M/MV5BNGZmODU3ZDEtMjQwZC00NTA5LThmNWYtYzk5MmY5ZmM4NGIxXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_QL75_UX190_CR0,0,190,281_.jpg",
+                                  "movieLength": 120,
+                                  "name":"Trap: Day one",
+                                  "projectionFormat":"D_2D",
+                                  "subtitles":"Bulg.",
+                                  "trailerUrl": "https://www.youtube.com/embed/YPY7J-flzE8",
+                                  "movieClass": "C_PLUS",
+                                  "genreCategories":["FANTASY", "HORROR"]
+                                }
+                                """)
 
-        mockMvc.perform(delete("/movies/delete-movie/{id}", testMovie.getId())
+                ).andExpect(status().isCreated())
+                .andExpect(header().exists("Location"))
+                .andReturn();
+
+        this.mockMvc.perform(delete("/movies/delete-movie/{id}", testMovie.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -106,7 +158,6 @@ public class MovieControllerTestIT {
     @Test
     public void testAddBookingTimes() throws Exception {
         Movie testMovie = this.createMovie();
-        this.movieRepository.save(testMovie);
 
         MvcResult mvcResult = this.mockMvc.perform(put("/movies/update-projection-time/{id}", testMovie.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -123,7 +174,7 @@ public class MovieControllerTestIT {
                                   "trailerUrl": "https://www.youtube.com/embed/YPY7J-flzE8",
                                   "movieClass": "C_PLUS",
                                   "genreCategories":["FANTASY", "HORROR"],
-                                  "bookingTimes": ["_18_20", "_19_50"]
+                                  "bookingTimes": ["_18_20", "_19_50"] 
                                 }
                                 """)
 
@@ -143,6 +194,7 @@ public class MovieControllerTestIT {
         List<Category> categories = List.of(new Category(Genre.ACTION));
         MovieClass classEnum = new MovieClass(MovieClassEnum.D_);
         return new Movie()
+                .setId(1)
                 .setAudio("Angl.")
                 .setGenreCategories(categories)
                 .setMovieClass(classEnum)
@@ -154,5 +206,14 @@ public class MovieControllerTestIT {
                 .setImageUrl("testImage")
                 .setTrailerUrl("https://www.youtube.com/embed/hJiPAJKjUVg")
                 .setProjectionFormat(ProjectionFormat.D_3D);
+    }
+
+    private void initMovieClassToRepo() {
+        if (this.movieClassRepository.count() == 0) {
+            List<MovieClass> movieClasses = Arrays.stream(MovieClassEnum.values())
+                    .map(MovieClass::new)
+                    .toList();
+            this.movieClassRepository.saveAll(movieClasses);
+        }
     }
 }

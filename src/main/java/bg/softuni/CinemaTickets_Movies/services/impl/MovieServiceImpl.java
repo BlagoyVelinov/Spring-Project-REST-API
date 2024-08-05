@@ -13,6 +13,7 @@ import bg.softuni.CinemaTickets_Movies.services.BookingTimeService;
 import bg.softuni.CinemaTickets_Movies.services.CategoryService;
 import bg.softuni.CinemaTickets_Movies.services.MovieClassService;
 import bg.softuni.CinemaTickets_Movies.services.MovieService;
+import bg.softuni.CinemaTickets_Movies.services.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie getMovieById(long id) {
         return this.movieRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("--->Movie not found!<---"));
+                .orElseThrow(()->new ObjectNotFoundException("--->Movie not found!<---"));
     }
 
     @Override

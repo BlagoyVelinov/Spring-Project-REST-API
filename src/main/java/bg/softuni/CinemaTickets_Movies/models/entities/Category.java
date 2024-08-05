@@ -2,14 +2,14 @@ package bg.softuni.CinemaTickets_Movies.models.entities;
 
 import bg.softuni.CinemaTickets_Movies.models.enums.BookingTimeEnum;
 import bg.softuni.CinemaTickets_Movies.models.enums.Genre;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "categories")
-public class Category extends BaseEntity {
+public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Enumerated(EnumType.STRING)
     private Genre name;
 
@@ -18,6 +18,15 @@ public class Category extends BaseEntity {
 
     public Category(Genre name) {
         this.name = name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public Category setId(long id) {
+        this.id = id;
+        return this;
     }
 
     public Genre getName() {

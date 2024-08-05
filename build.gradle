@@ -25,6 +25,10 @@ dependencies {
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'org.testcontainers:mysql'
+
 	testRuntimeOnly 'org.hsqldb:hsqldb'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

@@ -57,7 +57,7 @@ public class MovieController {
     @DeleteMapping("/delete-movie/{id}")
     public ResponseEntity<MovieDto> deleteMovieById(@PathVariable("id") long id) {
         this.movieService.deleteMovieById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/booking-time/{id}")

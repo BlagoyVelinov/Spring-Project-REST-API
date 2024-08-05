@@ -6,7 +6,10 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "booking_times")
-public class BookingTime extends BaseEntity {
+public class BookingTime {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Column(name = "booking_time")
     @Enumerated(EnumType.STRING)
@@ -19,6 +22,15 @@ public class BookingTime extends BaseEntity {
 
     public BookingTime(BookingTimeEnum bookingTime) {
         this.setBookingTime(bookingTime);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public BookingTime setId(long id) {
+        this.id = id;
+        return this;
     }
 
     public BookingTimeEnum getBookingTime() {
