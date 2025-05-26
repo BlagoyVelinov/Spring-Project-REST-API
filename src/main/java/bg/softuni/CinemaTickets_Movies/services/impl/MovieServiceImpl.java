@@ -58,6 +58,14 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<MovieDto> getAllUpcomingMovies() {
+        List<Movie> upcomingMovieList = this.movieRepository.findAllMoviesByBookingTimesEmpty();
+        return upcomingMovieList.stream()
+                .map(this::mapMovieToMovieDto)
+                .toList();
+    }
+
+    @Override
     public void addBookingTimes(long movieId, BookingTimeDto bookingTimeDto) {
         Movie movie = this.getMovieById(movieId);
         List<BookingTime> bookingTimes = this.bookingTimeService.getBookingTimesByStartTime(bookingTimeDto);

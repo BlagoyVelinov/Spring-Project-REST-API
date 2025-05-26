@@ -14,6 +14,8 @@ public interface MovieService {
 
     List<MovieDto> getAllMovies();
 
+    List<MovieDto> getAllUpcomingMovies();
+
     void addBookingTimes(long movieId, BookingTimeDto bookingTimeDto);
     void deleteMovieById(long movieId);
     MovieDto getMovieDtoById(long movieId);

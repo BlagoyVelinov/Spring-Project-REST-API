@@ -14,7 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/movies")
+@RequestMapping("/api/movies")
 public class MovieController {
 
     private final MovieService movieService;
@@ -30,6 +30,12 @@ public class MovieController {
     public ResponseEntity<List<MovieDto>> getAllMovies() {
         return ResponseEntity.ok(this.movieService.getAllMovies());
     }
+
+    @GetMapping("/upcoming")
+    public ResponseEntity<List<MovieDto>> getUpcomingMovies() {
+        return ResponseEntity.ok(this.movieService.getAllUpcomingMovies());
+    }
+
     @PostMapping("/add-movie")
     public ResponseEntity<MovieDto> createMovie(@RequestBody AddMovieDto addMovieDto) {
         MovieDto movieDto = this.movieService.movieCreate(addMovieDto);
