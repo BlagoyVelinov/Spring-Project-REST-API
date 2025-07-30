@@ -24,7 +24,7 @@ VALUES ('Engl',
         'HALL_3', 'https://www.cinemacity.bg/xmedia-cw/repo/feats/posters/6361D3R.jpg', 95, 'Despicable Me 4', 'D_3D',
         'Bulg', 'https://www.youtube.com/embed/qQlr9-rF32A', 1),
        ('Engl', 'Trap follows a father and his teen daughter, who attend a pop concert by Lady Raven. However, they realize they are actually at the center of a much darker event',
-        'HALL_2', 'https://m.media-amazon.com/images/M/MV5BZmYwY2EyZmItYWViZi00YTFhLWE3NGEtMDE5ODJmMTQ2ZWRhXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg',
+        'HALL_2', 'https://m.media-amazon.com/images/S/pv-target-images/15fe2e50973554403896b11b63745d3164dff114772db05b1c7e66976118739f.jpg',
         120, 'Trap 2024', 'D_4DX', 'Bulg', 'https://www.youtube.com/embed/hJiPAJKjUVg', 5);
 
 INSERT INTO `movies__booking_times`(`movie_id`, `booking_time_id`)
