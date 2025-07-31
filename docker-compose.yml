@@ -1,0 +1,43 @@
+services:
+  mysql-movies:
+    image: mysql:8.0
+    container_name: mysql-movies
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql-movies-data:/var/lib/mysql
+    networks:
+      - internal-movies
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  movies-api:
+    image: blagoyvelinov/cinema-tickets-movies
+    container_name: movies-api
+    restart: on-failure
+    environment:
+      db_host: mysql-movies
+      db_port: 3306
+      db_name: cinema_tickets_movies
+      db_username: root
+      db_password: root
+      JWT_SECRET: ThisIsAVeryLongSuperSecretKeyThatIsAtLeast32Chars
+    depends_on:
+      mysql-movies:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    networks:
+      - internal-movies
+
+volumes:
+  mysql-movies-data:
+
+networks:
+  internal-movies:
