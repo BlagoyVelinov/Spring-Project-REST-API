@@ -2,14 +2,12 @@ package bg.softuni.CinemaTickets_Movies.services.impl;
 
 import bg.softuni.CinemaTickets_Movies.models.dtos.BookingTimeDto;
 import bg.softuni.CinemaTickets_Movies.models.entities.BookingTime;
-import bg.softuni.CinemaTickets_Movies.models.enums.BookingTimeEnum;
 import bg.softuni.CinemaTickets_Movies.repositories.BookingTimeRepository;
 import bg.softuni.CinemaTickets_Movies.services.BookingTimeService;
 import bg.softuni.CinemaTickets_Movies.services.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service

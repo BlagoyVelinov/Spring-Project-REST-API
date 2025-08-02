@@ -8,6 +8,7 @@ import bg.softuni.CinemaTickets_Movies.services.BookingTimeService;
 import bg.softuni.CinemaTickets_Movies.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -37,11 +38,12 @@ public class MovieController {
     }
 
     @PostMapping("/add-movie")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<MovieDto> createMovie(@RequestBody AddMovieDto addMovieDto) {
         MovieDto movieDto = this.movieService.movieCreate(addMovieDto);
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
-                        .path("/add=movie/{id}")
+                        .path("/add-movie/{id}")
                         .buildAndExpand(movieDto.getId())
                         .toUri()
         ).body(movieDto);

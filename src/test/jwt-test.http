@@ -1,0 +1,46 @@
+### Test JWT validation with admin token
+### First you need to get a valid JWT token from the main auth microservice
+### Then use the token here
+
+### Test for creating a movie with a valid admin token
+POST http://localhost:8081/api/movies/add-movie
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+{
+  "audio": "Angl.",
+  "description": "JWT validation test movie",
+  "hallNumber":"HALL_2",
+  "imageUrl":"https://example.com/image.jpg",
+  "movieLength": 120,
+  "name":"JWT Test Movie",
+  "projectionFormat":"D_2D",
+  "subtitles":"Bulg.",
+  "trailerUrl": "https://www.youtube.com/embed/test",
+  "movieClass": "C_PLUS",
+  "genreCategories":["ACTION", "ADVENTURE"]
+}
+
+### Test access without token (should return 401)
+POST http://localhost:8081/api/movies/add-movie
+Content-Type: application/json
+
+{
+  "audio": "Angl.",
+  "description": "Tokenless test",
+  "hallNumber":"HALL_2",
+  "imageUrl":"https://example.com/image.jpg",
+  "movieLength": 120,
+  "name":"No Token Test",
+  "projectionFormat":"D_2D",
+  "subtitles":"Bulg.",
+  "trailerUrl": "https://www.youtube.com/embed/test",
+  "movieClass": "C_PLUS",
+  "genreCategories":["ACTION"]
+}
+
+### Test for public endpoints (should work without a token)
+GET http://localhost:8081/api/movies
+
+### Test for a specific movie
+GET http://localhost:8081/api/movies/movie/1 

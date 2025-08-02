@@ -1,0 +1,97 @@
+### Test different YouTube URL formats
+### First you need to get a valid JWT token from the main auth microservice
+
+### Test 1: Old format with v= parameter
+POST http://localhost:8081/api/movies/add-movie
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+{
+  "audio": "Angl.",
+  "description": "Test with old YouTube format",
+  "hallNumber":"HALL_2",
+  "imageUrl":"https://example.com/image.jpg",
+  "movieLength": 120,
+  "name":"Test Movie - Old Format",
+  "projectionFormat":"D_2D",
+  "subtitles":"Bulg.",
+  "trailerUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "movieClass": "C_PLUS",
+  "genreCategories":["ACTION"]
+}
+
+### Test 2: New format with youtu.be
+POST http://localhost:8081/api/movies/add-movie
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+{
+  "audio": "Angl.",
+  "description": "Test with youtu.be format",
+  "hallNumber":"HALL_2",
+  "imageUrl":"https://example.com/image.jpg",
+  "movieLength": 120,
+  "name":"Test Movie - Youtu.be",
+  "projectionFormat":"D_2D",
+  "subtitles":"Bulg.",
+  "trailerUrl": "https://youtu.be/dQw4w9WgXcQ",
+  "movieClass": "C_PLUS",
+  "genreCategories":["COMEDY"]
+}
+
+### Test 3: Embed format (now correct)
+POST http://localhost:8081/api/movies/add-movie
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+{
+  "audio": "Angl.",
+  "description": "Embed format test",
+  "hallNumber":"HALL_2",
+  "imageUrl":"https://example.com/image.jpg",
+  "movieLength": 120,
+  "name":"Test Movie - Embed",
+  "projectionFormat":"D_2D",
+  "subtitles":"Bulg.",
+  "trailerUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  "movieClass": "C_PLUS",
+  "genreCategories":["DRAMA"]
+}
+
+### Test 4: New format with /watch/ and parameters
+POST http://localhost:8081/api/movies/add-movie
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+{
+  "audio": "Angl.",
+  "description": "Test with new YouTube format",
+  "hallNumber":"HALL_2",
+  "imageUrl":"https://example.com/image.jpg",
+  "movieLength": 120,
+  "name":"Test Movie - New Format",
+  "projectionFormat":"D_2D",
+  "subtitles":"Bulg.",
+  "trailerUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=30s",
+  "movieClass": "C_PLUS",
+  "genreCategories":["THRILLER"]
+}
+
+### Test 5: Format with additional parameters
+POST http://localhost:8081/api/movies/add-movie
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+{
+  "audio": "Angl.",
+  "description": "Test with additional parameters",
+  "hallNumber":"HALL_2",
+  "imageUrl":"https://example.com/image.jpg",
+  "movieLength": 120,
+  "name":"Test Movie - Extra Params",
+  "projectionFormat":"D_2D",
+  "subtitles":"Bulg.",
+  "trailerUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=PLbpi6ZahtOH6Bl7sRseeJ03Wy9IOY60Yy&index=1",
+  "movieClass": "C_PLUS",
+  "genreCategories":["ADVENTURE"]
+} 

@@ -7,11 +7,16 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "movies")
 public class Movie{
     private static final String REQUIRED_URL_PART = "https://www.youtube.com/embed/";
+    private static final Pattern YOUTUBE_PATTERN = Pattern.compile(
+        "(?:youtube\\.com\\/(?:[^\\/\\n\\s]+\\/\\S+\\/|(?:v|e(?:mbed)?)\\/|\\S*?[?&]v=)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})"
+    );
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -145,14 +150,19 @@ public class Movie{
     }
 
     public Movie setTrailerUrl(String trailerUrl) {
-
-        if (!trailerUrl.contains(REQUIRED_URL_PART)) {
-            int startIndex = trailerUrl.indexOf("=");
-            trailerUrl = REQUIRED_URL_PART +
-                    trailerUrl.substring(startIndex).replaceFirst("=", "");
+        if (trailerUrl.startsWith(REQUIRED_URL_PART)) {
+            this.trailerUrl = trailerUrl;
+            return this;
         }
 
-        this.trailerUrl = trailerUrl;
+        Matcher matcher = YOUTUBE_PATTERN.matcher(trailerUrl);
+        if (matcher.find()) {
+            String videoId = matcher.group(1);
+            this.trailerUrl = REQUIRED_URL_PART + videoId;
+        } else {
+            this.trailerUrl = trailerUrl;
+        }
+
         return this;
     }
 

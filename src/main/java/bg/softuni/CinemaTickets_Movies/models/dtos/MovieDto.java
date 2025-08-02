@@ -4,13 +4,8 @@ import bg.softuni.CinemaTickets_Movies.models.entities.BookingTime;
 import bg.softuni.CinemaTickets_Movies.models.entities.MovieClass;
 import bg.softuni.CinemaTickets_Movies.models.enums.Genre;
 import bg.softuni.CinemaTickets_Movies.models.enums.HallNumber;
-import bg.softuni.CinemaTickets_Movies.models.enums.MovieClassEnum;
 import bg.softuni.CinemaTickets_Movies.models.enums.ProjectionFormat;
-import bg.softuni.CinemaTickets_Movies.validation.annotation.UniqueMovieName;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+
 
 import java.util.ArrayList;
 import java.util.List;

@@ -5,6 +5,9 @@ logging:
         SQL: debug
         type:
         descriptor: TRACE
+    bg.softuni.CinemaTickets_Movies.config.JwtAuthFilter: DEBUG
+    bg.softuni.CinemaTickets_Movies.services.impl.JwtService: DEBUG
+    org.springframework.security: DEBUG
 
 spring:
   application:
