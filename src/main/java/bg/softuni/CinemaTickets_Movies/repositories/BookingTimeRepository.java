@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface BookingTimeRepository extends JpaRepository<BookingTime, Long> {
     List<BookingTime> findAllByBookingTimeIn(List<BookingTimeEnum> startMovieTimes);
+    List<BookingTime> findAllByBookingTimeValueIn(List<String> bookingTimeValues);
 }

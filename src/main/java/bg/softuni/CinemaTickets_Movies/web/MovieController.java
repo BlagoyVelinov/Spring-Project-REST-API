@@ -38,7 +38,6 @@ public class MovieController {
     }
 
     @PostMapping("/add-movie")
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<MovieDto> createMovie(@RequestBody AddMovieDto addMovieDto) {
         MovieDto movieDto = this.movieService.movieCreate(addMovieDto);
         return ResponseEntity.created(
@@ -59,6 +58,13 @@ public class MovieController {
     public ResponseEntity<MovieDto>updateProjection(@PathVariable("id") long id,
                                                     @RequestBody BookingTimeDto bookingTimeDto) {
         this.movieService.addBookingTimes(id, bookingTimeDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/update-movie/{id}")
+    public ResponseEntity<MovieDto>updateMovie(@PathVariable("id") long id,
+                                                    @RequestBody MovieDto movieDto) {
+        this.movieService.changeMovieData(id, movieDto);
         return ResponseEntity.ok().build();
     }
 

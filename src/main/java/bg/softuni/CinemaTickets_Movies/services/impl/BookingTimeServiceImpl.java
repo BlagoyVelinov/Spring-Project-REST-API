@@ -26,6 +26,11 @@ public class BookingTimeServiceImpl implements BookingTimeService {
     }
 
     @Override
+    public List<BookingTime> getBookingTimesByValues(List<String> bookingTimeValues) {
+        return this.bookingTimeRepository.findAllByBookingTimeValueIn(bookingTimeValues);
+    }
+
+    @Override
     public BookingTime getBookingTimeById(long id) {
         return this.bookingTimeRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Booking time is not found!"));

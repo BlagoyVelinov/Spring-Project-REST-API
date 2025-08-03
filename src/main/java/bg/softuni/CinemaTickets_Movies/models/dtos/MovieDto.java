@@ -36,7 +36,7 @@ public class MovieDto {
 
     private List<Genre> genreCategories;
 
-    private List<BookingTime> bookingTimes;
+    private List<String> bookingTimes;
 
     public MovieDto() {
         this.genreCategories = new ArrayList<>();
@@ -151,11 +151,11 @@ public class MovieDto {
         return this;
     }
 
-    public List<BookingTime> getBookingTimes() {
+    public List<String> getBookingTimes() {
         return bookingTimes;
     }
 
-    public MovieDto setBookingTimes(List<BookingTime> bookingTimes) {
+    public MovieDto setBookingTimes(List<String> bookingTimes) {
         this.bookingTimes = bookingTimes;
         return this;
     }

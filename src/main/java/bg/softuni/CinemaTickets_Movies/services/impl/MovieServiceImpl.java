@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -39,7 +40,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie getMovieById(long id) {
         return this.movieRepository.findById(id)
-                .orElseThrow(()->new ObjectNotFoundException("--->Movie not found!<---"));
+                .orElseThrow(() -> new ObjectNotFoundException("--->Movie not found!<---"));
     }
 
     @Override
@@ -84,6 +85,15 @@ public class MovieServiceImpl implements MovieService {
         return this.mapMovieToMovieDto(movie);
     }
 
+    @Override
+    public MovieDto changeMovieData(long id, MovieDto movieDto) {
+        Movie movie = this.getMovieById(id);
+        movie = this.mapChangedMovieDtoToMovie(movie, movieDto);
+        this.movieRepository.save(movie);
+
+        return movieDto;
+    }
+
     private MovieDto mapMovieToMovieDto(Movie movie) {
         List<Genre> categories = movie.getGenreCategories()
                 .stream()
@@ -103,7 +113,10 @@ public class MovieServiceImpl implements MovieService {
                 .setImageUrl(movie.getImageUrl())
                 .setTrailerUrl(movie.getTrailerUrl())
                 .setProjectionFormat(movie.getProjectionFormat())
-                .setBookingTimes(movie.getBookingTimes());
+                .setBookingTimes(movie.getBookingTimes()
+                        .stream()
+                        .map(BookingTime::getBookingTimeValue)
+                        .collect(Collectors.toList()));
     }
 
     private Movie mapMovieDtoToMovie(AddMovieDto addMovie) {
@@ -122,5 +135,24 @@ public class MovieServiceImpl implements MovieService {
                 .setImageUrl(addMovie.getImageUrl())
                 .setTrailerUrl(addMovie.getTrailerUrl())
                 .setProjectionFormat(addMovie.getProjectionFormat());
+    }
+
+    private Movie mapChangedMovieDtoToMovie(Movie movie, MovieDto movieDto) {
+        List<Category> categories = this.categoryService.getCategoriesByGenre(movieDto.getGenreCategories());
+        List<BookingTime> bookingTimes = this.bookingTimeService.getBookingTimesByValues(movieDto.getBookingTimes());
+
+        return movie
+                .setAudio(movieDto.getAudio())
+                .setGenreCategories(categories)
+                .setMovieClass(movieDto.getMovieClass())
+                .setDescription(movieDto.getDescription())
+                .setName(movieDto.getName())
+                .setHallNumber(movieDto.getHallNumber())
+                .setMovieLength(movieDto.getMovieLength())
+                .setSubtitles(movieDto.getSubtitles())
+                .setImageUrl(movieDto.getImageUrl())
+                .setTrailerUrl(movieDto.getTrailerUrl())
+                .setProjectionFormat(movieDto.getProjectionFormat())
+                .setBookingTimes(bookingTimes);
     }
 }
