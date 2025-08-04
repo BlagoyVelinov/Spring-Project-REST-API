@@ -36,4 +36,10 @@ public class BookingTimeServiceImpl implements BookingTimeService {
                 .orElseThrow(() -> new ObjectNotFoundException("Booking time is not found!"));
     }
 
+    @Override
+    public BookingTime getBookingTimeByValue(String value) {
+        return this.bookingTimeRepository.findByBookingTimeValue(value)
+                .orElseThrow(() -> new ObjectNotFoundException("Booking time is not found!"));
+    }
+
 }

@@ -79,4 +79,10 @@ public class MovieController {
         BookingTime bookingTime = this.bookingTimeService.getBookingTimeById(id);
         return ResponseEntity.ok(bookingTime);
     }
+
+    @GetMapping("/bookingTime/{value}")
+    public ResponseEntity<BookingTime> getBookingTimeByValue(@PathVariable("value") String value) {
+        BookingTime bookingTime = this.bookingTimeService.getBookingTimeByValue(value);
+        return ResponseEntity.ok(bookingTime);
+    }
 }

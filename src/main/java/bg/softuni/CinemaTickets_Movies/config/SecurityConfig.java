@@ -38,7 +38,8 @@ public class SecurityConfig {
                     auth.requestMatchers(
                                     "/api/movies",
                                     "/api/movies/upcoming",
-                                    "/api/movies/movie/*"
+                                    "/api/movies/movie/*",
+                                    "/api/movies/bookingTime/*"
                             ).permitAll()
                             .requestMatchers(
                                     "/api/movies/add-movie",

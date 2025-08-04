@@ -10,4 +10,5 @@ public interface BookingTimeService {
     List<BookingTime> getBookingTimesByValues(List<String> bookingTimeValues);
     BookingTime getBookingTimeById(long id);
 
+    BookingTime getBookingTimeByValue(String value);
 }
