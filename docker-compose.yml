@@ -22,12 +22,12 @@ services:
     container_name: movies-api
     restart: on-failure
     environment:
-      db_host: mysql-movies
+      db_host: ${db_host}
       db_port: 3306
-      db_name: cinema_tickets_movies
-      db_username: root
-      db_password: root
-      JWT_SECRET: ThisIsAVeryLongSuperSecretKeyThatIsAtLeast32Chars
+      db_name: ${db_name}
+      db_username: ${db_username}
+      db_password: ${db_password}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
       mysql-movies:
         condition: service_healthy
