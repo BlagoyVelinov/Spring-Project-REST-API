@@ -43,6 +43,7 @@ public class SecurityConfig {
                             ).permitAll()
                             .requestMatchers(
                                     "/api/movies/add-movie",
+                                    "/api/movies/update-movie/*",
                                     "/api/movies/delete-movie/*",
                                     "/api/movies/update-projection-time/*")
                             .hasRole("ADMINISTRATOR")

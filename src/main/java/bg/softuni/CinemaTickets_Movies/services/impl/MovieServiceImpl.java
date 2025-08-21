@@ -8,6 +8,7 @@ import bg.softuni.CinemaTickets_Movies.models.entities.Category;
 import bg.softuni.CinemaTickets_Movies.models.entities.Movie;
 import bg.softuni.CinemaTickets_Movies.models.entities.MovieClass;
 import bg.softuni.CinemaTickets_Movies.models.enums.Genre;
+import bg.softuni.CinemaTickets_Movies.models.enums.MovieClassEnum;
 import bg.softuni.CinemaTickets_Movies.repositories.MovieRepository;
 import bg.softuni.CinemaTickets_Movies.services.BookingTimeService;
 import bg.softuni.CinemaTickets_Movies.services.CategoryService;
@@ -140,11 +141,13 @@ public class MovieServiceImpl implements MovieService {
     private Movie mapChangedMovieDtoToMovie(Movie movie, MovieDto movieDto) {
         List<Category> categories = this.categoryService.getCategoriesByGenre(movieDto.getGenreCategories());
         List<BookingTime> bookingTimes = this.bookingTimeService.getBookingTimesByValues(movieDto.getBookingTimes());
+        MovieClass movieClass = this.movieClassService
+                .getMovieClassByName(MovieClassEnum.valueOf(movieDto.getMovieClassName()));
 
         return movie
                 .setAudio(movieDto.getAudio())
                 .setGenreCategories(categories)
-                .setMovieClass(movieDto.getMovieClass())
+                .setMovieClass(movieClass)
                 .setDescription(movieDto.getDescription())
                 .setName(movieDto.getName())
                 .setHallNumber(movieDto.getHallNumber())

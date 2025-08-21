@@ -18,6 +18,9 @@ spring:
     password: ${db_password:}
     username: ${db_username:root}
 
+  profiles:
+    active: dev
+
   sql:
     init:
       mode: never

@@ -38,6 +38,7 @@ services:
 
 volumes:
   mysql-movies-data:
+          name: mysql-movies-data
 
 networks:
   internal-movies:

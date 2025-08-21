@@ -5,6 +5,7 @@ import bg.softuni.CinemaTickets_Movies.models.entities.MovieClass;
 import bg.softuni.CinemaTickets_Movies.models.enums.Genre;
 import bg.softuni.CinemaTickets_Movies.models.enums.HallNumber;
 import bg.softuni.CinemaTickets_Movies.models.enums.ProjectionFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 import java.util.ArrayList;
@@ -31,8 +32,10 @@ public class MovieDto {
     private String trailerUrl;
 
     private ProjectionFormat projectionFormat;
-
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private MovieClass movieClass;
+
+    private String movieClassName;
 
     private List<Genre> genreCategories;
 
@@ -157,6 +160,15 @@ public class MovieDto {
 
     public MovieDto setBookingTimes(List<String> bookingTimes) {
         this.bookingTimes = bookingTimes;
+        return this;
+    }
+
+    public String getMovieClassName() {
+        return movieClassName;
+    }
+
+    public MovieDto setMovieClassName(String movieClassName) {
+        this.movieClassName = movieClassName;
         return this;
     }
 }
