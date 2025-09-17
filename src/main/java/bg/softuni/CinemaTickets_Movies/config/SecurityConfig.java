@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -34,20 +35,22 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
+
                     logger.info("Configuring authorization rules");
-                    auth.requestMatchers(
-                                    "/api/movies",
-                                    "/api/movies/upcoming",
-                                    "/api/movies/movie/*",
-                                    "/api/movies/bookingTime/*"
-                            ).permitAll()
-                            .requestMatchers(
-                                    "/api/movies/add-movie",
-                                    "/api/movies/update-movie/*",
-                                    "/api/movies/delete-movie/*",
-                                    "/api/movies/update-projection-time/*")
-                            .hasRole("ADMINISTRATOR")
-                            .anyRequest().authenticated();
+                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .requestMatchers(
+                                "/api/movies",
+                                "/api/movies/upcoming",
+                                "/api/movies/movie/*",
+                                "/api/movies/bookingTime/*"
+                        ).permitAll()
+                        .requestMatchers(
+                                "/api/movies/add-movie",
+                                "/api/movies/update-movie/*",
+                                "/api/movies/delete-movie/*",
+                                "/api/movies/update-projection-time/*")
+                        .hasRole("ADMINISTRATOR")
+                        .anyRequest().authenticated();
                     logger.info("Authorization rules configured");
                 })
                 .addFilterBefore(new JwtAuthFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
