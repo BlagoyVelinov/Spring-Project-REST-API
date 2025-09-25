@@ -27,3 +27,9 @@ movies:
   api:
     baseUrl: "http://localhost:8081"
 
+
+jwt:
+  secret: ThisIsAVeryLongSuperSecretKeyThatIsAtLeast32Chars
+
+server:
+  port: 8081

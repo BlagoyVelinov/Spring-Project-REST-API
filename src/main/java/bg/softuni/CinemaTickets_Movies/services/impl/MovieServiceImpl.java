@@ -1,7 +1,6 @@
 package bg.softuni.CinemaTickets_Movies.services.impl;
 
 import bg.softuni.CinemaTickets_Movies.models.dtos.AddMovieDto;
-import bg.softuni.CinemaTickets_Movies.models.dtos.BookingTimeDto;
 import bg.softuni.CinemaTickets_Movies.models.dtos.MovieDto;
 import bg.softuni.CinemaTickets_Movies.models.entities.BookingTime;
 import bg.softuni.CinemaTickets_Movies.models.entities.Category;
@@ -65,14 +64,6 @@ public class MovieServiceImpl implements MovieService {
         return upcomingMovieList.stream()
                 .map(this::mapMovieToMovieDto)
                 .toList();
-    }
-
-    @Override
-    public void addBookingTimes(long movieId, BookingTimeDto bookingTimeDto) {
-        Movie movie = this.getMovieById(movieId);
-        List<BookingTime> bookingTimes = this.bookingTimeService.getBookingTimesByStartTime(bookingTimeDto);
-        movie.setBookingTimes(bookingTimes);
-        this.movieRepository.save(movie);
     }
 
     @Override

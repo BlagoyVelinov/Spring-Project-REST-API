@@ -1,11 +1,15 @@
 package bg.softuni.CinemaTickets_Movies.web;
 
-import bg.softuni.CinemaTickets_Movies.models.entities.Category;
+import bg.softuni.CinemaTickets_Movies.models.dtos.AddMovieDto;
+import bg.softuni.CinemaTickets_Movies.models.dtos.MovieDto;
+import bg.softuni.CinemaTickets_Movies.models.entities.BookingTime;
 import bg.softuni.CinemaTickets_Movies.models.entities.Movie;
 import bg.softuni.CinemaTickets_Movies.models.entities.MovieClass;
 import bg.softuni.CinemaTickets_Movies.models.enums.*;
+import bg.softuni.CinemaTickets_Movies.repositories.BookingTimeRepository;
 import bg.softuni.CinemaTickets_Movies.repositories.MovieClassRepository;
 import bg.softuni.CinemaTickets_Movies.repositories.MovieRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -18,202 +22,229 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
-public class MovieControllerTestIT {
+@AutoConfigureMockMvc(addFilters = false)
+class MovieControllerIT {
 
     @Autowired
     private MovieRepository movieRepository;
+
     @Autowired
     private MovieClassRepository movieClassRepository;
 
+    @Autowired
+    private BookingTimeRepository bookingTimeRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setUp() {
-        this.initMovieClassToRepo();
+    void setUp() {
+        initMovieClassToRepo();
+        movieRepository.deleteAll();
     }
 
     @AfterEach
-    public void tearDown() {
-        this.movieRepository.deleteAll();
-        this.movieClassRepository.deleteAll();
+    void tearDown() {
+        movieRepository.deleteAll();
+        movieClassRepository.deleteAll();
     }
 
     @Test
-    public void testGetMovieById() throws Exception {
-        Movie testMovie = this.createMovie();
-        MvcResult mvcResult = this.mockMvc.perform(post("/movies/add-movie")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                    {
-                                  "audio": "Angl.",
-                                  "description": "Нито звук: Ден първи ни пренася сред оживените улици на Ню Йорк, където ставаме свидетели на ужасяващите първи мигове от колапса на човечеството и потъването на света в тишина...",
-                                  "hallNumber":"HALL_2",
-                                  "imageUrl":"https://m.media-amazon.com/images/M/MV5BNGZmODU3ZDEtMjQwZC00NTA5LThmNWYtYzk5MmY5ZmM4NGIxXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_QL75_UX190_CR0,0,190,281_.jpg",
-                                  "movieLength": 120,
-                                  "name":"Trap: Day one",
-                                  "projectionFormat":"D_2D",
-                                  "subtitles":"Bulg.",
-                                  "trailerUrl": "https://www.youtube.com/embed/YPY7J-flzE8",
-                                  "movieClass": "C_PLUS",
-                                  "genreCategories":["FANTASY", "HORROR"]
-                                }
-                                """)
+    void testCreateMovie() throws Exception {
+        AddMovieDto addDto = createMovie();
 
-                ).andExpect(status().isCreated())
-                .andExpect(header().exists("Location"))
+        MvcResult result = mockMvc.perform(post("/api/movies/add-movie")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(addDto)))
+                .andExpect(status().isCreated())
                 .andReturn();
 
-        this.mockMvc
-                .perform(get("/movies/movie/{id}", testMovie.getId())
-                        .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-    }
-
-    @Test
-    public void testCreateMovie() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(post("/movies/add-movie")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                    {
-                                  "audio": "Angl.",
-                                  "description": "Нито звук: Ден първи ни пренася сред оживените улици на Ню Йорк, където ставаме свидетели на ужасяващите първи мигове от колапса на човечеството и потъването на света в тишина...",
-                                  "hallNumber":"HALL_2",
-                                  "imageUrl":"https://m.media-amazon.com/images/M/MV5BNGZmODU3ZDEtMjQwZC00NTA5LThmNWYtYzk5MmY5ZmM4NGIxXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_QL75_UX190_CR0,0,190,281_.jpg",
-                                  "movieLength": 120,
-                                  "name":"Trap: Day one",
-                                  "projectionFormat":"D_2D",
-                                  "subtitles":"Bulg.",
-                                  "trailerUrl": "https://www.youtube.com/embed/YPY7J-flzE8",
-                                  "movieClass": "C_PLUS",
-                                  "genreCategories":["FANTASY", "HORROR"]
-                                }
-                                """)
-
-                ).andExpect(status().isCreated())
-                .andExpect(header().exists("Location"))
-                .andReturn();
-        String body = mvcResult.getResponse().getContentAsString();
+        String body = result.getResponse().getContentAsString();
         int id = JsonPath.read(body, "$.id");
-        Optional<Movie> optMovie = this.movieRepository.findById((long) id);
 
+        Optional<Movie> optMovie = movieRepository.findById((long) id);
         Assertions.assertTrue(optMovie.isPresent());
-        Movie movie = optMovie.get();
-        Assertions.assertEquals("Trap: Day one", movie.getName());
-        Assertions.assertEquals("https://www.youtube.com/embed/YPY7J-flzE8", movie.getTrailerUrl());
+        Assertions.assertEquals("Initial Movie", optMovie.get().getName());
     }
 
     @Test
-    public void testMovieNotFound() throws Exception {
-        Movie testMovie = this.createMovie();
-        this.mockMvc
-                .perform(get("/movies/movie/{id}", 5555)
-                        .contentType(MediaType.APPLICATION_JSON))
+    void testGetMovieById() throws Exception {
+        AddMovieDto addDto = createMovie();
+
+        MvcResult result = mockMvc.perform(post("/api/movies/add-movie")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(addDto)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        int id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+
+        mockMvc.perform(get("/api/movies/movie/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Initial Movie"));
+    }
+
+    @Test
+    void testGetAllMovies() throws Exception {
+        AddMovieDto addDto = createMovie();
+
+        mockMvc.perform(post("/api/movies/add-movie")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(addDto)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/movies"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].name").value(addDto.getName()))
+                .andExpect(jsonPath("$[0].description").value(addDto.getDescription()));
+    }
+
+    @Test
+    void testGetUpcomingMovies() throws Exception {
+        AddMovieDto upcomingMovie = createMovie();
+
+        mockMvc.perform(post("/api/movies/add-movie")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(upcomingMovie)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/movies/upcoming"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].name").value(upcomingMovie.getName()))
+                .andExpect(jsonPath("$[0].description").value(upcomingMovie.getDescription()));
+    }
+
+    @Test
+    void testMovieNotFound() throws Exception {
+        mockMvc.perform(get("/api/movies/movie/{id}", 5555))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    public void testDeleteMovieById() throws Exception {
+    void testDeleteMovieById() throws Exception {
+        AddMovieDto addDto = createMovie();
 
-        Movie testMovie = this.createMovie();
-        MvcResult mvcResult = this.mockMvc.perform(post("/movies/add-movie")
+        MvcResult result = mockMvc.perform(post("/api/movies/add-movie")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                    {
-                                  "audio": "Angl.",
-                                  "description": "Нито звук: Ден първи ни пренася сред оживените улици на Ню Йорк, където ставаме свидетели на ужасяващите първи мигове от колапса на човечеството и потъването на света в тишина...",
-                                  "hallNumber":"HALL_2",
-                                  "imageUrl":"https://m.media-amazon.com/images/M/MV5BNGZmODU3ZDEtMjQwZC00NTA5LThmNWYtYzk5MmY5ZmM4NGIxXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_QL75_UX190_CR0,0,190,281_.jpg",
-                                  "movieLength": 120,
-                                  "name":"Trap: Day one",
-                                  "projectionFormat":"D_2D",
-                                  "subtitles":"Bulg.",
-                                  "trailerUrl": "https://www.youtube.com/embed/YPY7J-flzE8",
-                                  "movieClass": "C_PLUS",
-                                  "genreCategories":["FANTASY", "HORROR"]
-                                }
-                                """)
-
-                ).andExpect(status().isCreated())
-                .andExpect(header().exists("Location"))
+                        .content(objectMapper.writeValueAsString(addDto)))
+                .andExpect(status().isCreated())
                 .andReturn();
 
-        this.mockMvc.perform(delete("/movies/delete-movie/{id}", testMovie.getId())
-                        .contentType(MediaType.APPLICATION_JSON))
+        int id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+
+        mockMvc.perform(delete("/api/movies/delete-movie/{id}", id))
                 .andExpect(status().isNoContent());
 
-        Assertions.assertTrue(this.movieRepository.findById(testMovie.getId()).isEmpty());
+        Assertions.assertTrue(movieRepository.findById((long) id).isEmpty());
     }
 
     @Test
-    public void testAddBookingTimes() throws Exception {
-        Movie testMovie = this.createMovie();
+    void testUpdateMovie() throws Exception {
+        AddMovieDto addDto = createMovie();
 
-        MvcResult mvcResult = this.mockMvc.perform(put("/movies/update-projection-time/{id}", testMovie.getId())
+        MvcResult result = mockMvc.perform(post("/api/movies/add-movie")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                    {
-                                  "audio": "Angl.",
-                                  "description": "Нито звук: Ден първи ни пренася сред оживените улици на Ню Йорк, където ставаме свидетели на ужасяващите първи мигове от колапса на човечеството и потъването на света в тишина...",
-                                  "hallNumber":"HALL_2",
-                                  "imageUrl":"https://m.media-amazon.com/images/M/MV5BNGZmODU3ZDEtMjQwZC00NTA5LThmNWYtYzk5MmY5ZmM4NGIxXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_QL75_UX190_CR0,0,190,281_.jpg",
-                                  "movieLength": 120,
-                                  "name":"Trap: Day one",
-                                  "projectionFormat":"D_2D",
-                                  "subtitles":"Bulg.",
-                                  "trailerUrl": "https://www.youtube.com/embed/YPY7J-flzE8",
-                                  "movieClass": "C_PLUS",
-                                  "genreCategories":["FANTASY", "HORROR"],
-                                  "bookingTimes": ["_18_20", "_19_50"] 
-                                }
-                                """)
-
-                ).andExpect(status().isUpgradeRequired())
-                .andExpect(header().exists("Location"))
+                        .content(objectMapper.writeValueAsString(addDto)))
+                .andExpect(status().isCreated())
                 .andReturn();
-        String body = mvcResult.getResponse().getContentAsString();
-        int id = JsonPath.read(body, "$.id");
-        Optional<Movie> optMovie = this.movieRepository.findById((long) id);
 
-        Assertions.assertTrue(optMovie.isPresent());
-        Movie movie = optMovie.get();
-        Assertions.assertEquals(BookingTimeEnum._18_20, movie.getBookingTimes().get(0).getBookingTime());
+        int id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+
+        MovieDto updateDto = getMovieDto(2L);
+
+        mockMvc.perform(put("/api/movies/update-movie/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDto)))
+                .andExpect(status().isOk());
+
+        Movie updated = movieRepository.findById((long) id).orElseThrow();
+        Assertions.assertEquals("Updated Movie", updated.getName());
+        Assertions.assertEquals("Updated desc", updated.getDescription());
+        Assertions.assertEquals(150, updated.getMovieLength());
+        Assertions.assertEquals(MovieClassEnum.B_, updated.getMovieClass().getName());
     }
 
-    private Movie createMovie() {
-        List<Category> categories = List.of(new Category(Genre.ACTION));
-        MovieClass classEnum = new MovieClass(MovieClassEnum.D_);
-        return new Movie()
-                .setId(1)
-                .setAudio("Angl.")
-                .setGenreCategories(categories)
-                .setMovieClass(classEnum)
-                .setDescription("Creating test movie")
-                .setName("Test movie")
-                .setHallNumber(HallNumber.HALL_2)
-                .setMovieLength(120)
-                .setSubtitles("Bulg")
-                .setImageUrl("testImage")
-                .setTrailerUrl("https://www.youtube.com/embed/hJiPAJKjUVg")
-                .setProjectionFormat(ProjectionFormat.D_3D);
+    @Test
+    void testGetBookingTimeByValue() throws Exception {
+        BookingTime bookingTime = bookingTimeRepository
+                .findByBookingTimeValue(BookingTimeEnum._18_20.getValue())
+                .orElseThrow(() -> new RuntimeException("No booking time found in DB"));
+
+        mockMvc.perform(get("/api/movies/bookingTime/{value}", bookingTime.getBookingTimeValue()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(bookingTime.getId()))
+                .andExpect(jsonPath("$.bookingTime").value(bookingTime.getBookingTime().name()))
+                .andExpect(jsonPath("$.bookingTimeValue").value(bookingTime.getBookingTimeValue()));
+
+    }
+
+    @Test
+    void testGetBookingTimeById() throws Exception {
+        BookingTime bookingTime = new BookingTime();
+        bookingTime.setBookingTime(BookingTimeEnum._19_50);
+        bookingTime = bookingTimeRepository.save(bookingTime);
+
+        mockMvc.perform(get("/api/movies/booking-time/{id}", bookingTime.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(bookingTime.getId()))
+                .andExpect(jsonPath("$.bookingTime").value("_19_50"));
     }
 
     private void initMovieClassToRepo() {
-        if (this.movieClassRepository.count() == 0) {
+        if (movieClassRepository.count() == 0) {
             List<MovieClass> movieClasses = Arrays.stream(MovieClassEnum.values())
                     .map(MovieClass::new)
                     .toList();
-            this.movieClassRepository.saveAll(movieClasses);
+            movieClassRepository.saveAll(movieClasses);
         }
+    }
+
+    private AddMovieDto createMovie() {
+        AddMovieDto addDto = new AddMovieDto();
+        addDto.setAudio("Angl.");
+        addDto.setDescription("Initial desc");
+        addDto.setHallNumber(HallNumber.HALL_2);
+        addDto.setImageUrl("https://example.com/test.jpg");
+        addDto.setMovieLength(120);
+        addDto.setName("Initial Movie");
+        addDto.setProjectionFormat(ProjectionFormat.D_2D);
+        addDto.setSubtitles("Bulg.");
+        addDto.setTrailerUrl("https://youtube.com/embed/test");
+        addDto.setMovieClass(MovieClassEnum.C_PLUS);
+        addDto.setGenreCategories(List.of(Genre.FANTASY, Genre.HORROR));
+
+        return addDto;
+    }
+
+    private MovieDto getMovieDto(long id) {
+        MovieDto movieDto = new MovieDto();
+        movieDto.setId(id);
+        movieDto.setAudio("Bulgarian");
+        movieDto.setDescription("Updated desc");
+        movieDto.setHallNumber(HallNumber.HALL_3);
+        movieDto.setImageUrl("https://example.com/updated.jpg");
+        movieDto.setMovieLength(150);
+        movieDto.setName("Updated Movie");
+        movieDto.setProjectionFormat(ProjectionFormat.D_3D);
+        movieDto.setSubtitles("Eng.");
+        movieDto.setTrailerUrl("https://youtube.com/embed/updated");
+        movieDto.setMovieClassName("B_");
+        movieDto.setGenreCategories(List.of(Genre.ACTION));
+
+        return movieDto;
     }
 }

@@ -54,13 +54,6 @@ public class MovieController {
         return ResponseEntity.ok(movieView);
     }
 
-    @PutMapping("/update-projection-time/{id}")
-    public ResponseEntity<MovieDto>updateProjection(@PathVariable("id") long id,
-                                                    @RequestBody BookingTimeDto bookingTimeDto) {
-        this.movieService.addBookingTimes(id, bookingTimeDto);
-        return ResponseEntity.ok().build();
-    }
-
     @PutMapping("/update-movie/{id}")
     public ResponseEntity<MovieDto>updateMovie(@PathVariable("id") long id,
                                                     @RequestBody MovieDto movieDto) {
